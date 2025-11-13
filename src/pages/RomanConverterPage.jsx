@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 export default function RomanConverterPage() {
   const [input, setInput] = useState("");
+
   const romanMap = new Map([
     ["M", 1000],
     ["CM", 900],
@@ -17,47 +18,45 @@ export default function RomanConverterPage() {
     ["IV", 4],
     ["I", 1],
   ]);
+
   const romanToInt = (roman) => {
     const s = roman.toUpperCase().trim();
     let i = 0;
     let val = 0;
 
     while (i < s.length) {
-      // Check for two-character subtractive notation first
       if (i + 1 < s.length && romanMap.has(s.slice(i, i + 2))) {
         val += romanMap.get(s.slice(i, i + 2));
         i += 2;
       } else {
-        val += romanMap.get(s[i]);
+        val += romanMap.get(s[i]) || 0;
         i += 1;
       }
     }
-
     return val;
   };
-  const value = romanToInt(input);
+
+  const value = input ? romanToInt(input) : "—";
 
   return (
-    <>
-      <section className="card">
-        <h1 className="page-title">Task 1 — Roman Numeral Converter</h1>
-        <p className="page-description">
-          Convert classical Roman numerals to integers. This converter supports
-          all standard Roman numeral symbols (I, V, X, L, C, D, M) with proper
-          subtractive notation (IV, IX, XL, XC, CD, CM) and validates input up
-          to 3999.
+    <div>
+      <section>
+        <h1>Task 1 — Roman Numeral Converter</h1>
+        <p>
+          Convert classical Roman numerals to integers. Supports standard symbols
+          (I, V, X, L, C, D, M) and subtractive notation (IV, IX, XL, XC, CD, CM).
         </p>
       </section>
-      <section className="card">
-        <h2 className="card-title">Task 1 — Roman Number ➜ Integer</h2>
-        <p className="card-description">
-          Supports classical numerals up to 3999. Valid symbols: I, V, X, L, C,
-          D, M with proper subtractive notation (IV, IX, XL, XC, CD, CM).
+
+      <section>
+        <h2>Roman Number ➜ Integer</h2>
+        <p>
+          Works up to 3999. Example inputs: LXXXVIII, XXXIV, MMXXIV.
         </p>
 
-        <div className="converter-grid">
-          <div className="input-group">
-            <label className="input-label">Roman input</label>
+        <div>
+          <div>
+            <label>Roman input:</label> <br />
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -65,12 +64,12 @@ export default function RomanConverterPage() {
             />
           </div>
 
-          <div className="converter-result">
-            <div className="result-label">Converted value</div>
-            <div className="result-value">{value ?? "—"}</div>
+          <div>
+            <p>Converted value:</p>
+            <h3>{value}</h3>
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }
