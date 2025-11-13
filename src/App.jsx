@@ -4,6 +4,7 @@ function App() {
   return (
     <BrowserRouter>
         <Routes>
+          <Route path="/" element={<Navigate to="/roman" replace />} />
           <Route path="/roman" element={<RomanConverterPage />} />
         </Routes>
     </BrowserRouter>
