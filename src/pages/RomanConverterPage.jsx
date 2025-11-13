@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 
-export default function RomanConverterPage() {
+export default function RomanConverter() {
   const [input, setInput] = useState("");
+  const [result, setResult] = useState("");
 
   const romanMap = new Map([
     ["M", 1000],
@@ -19,57 +20,53 @@ export default function RomanConverterPage() {
     ["I", 1],
   ]);
 
-  const romanToInt = (roman) => {
+  const validRoman = /^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/i;
+
+  function convertRoman(roman) {
+    if (!roman || !validRoman.test(roman)) return null;
     const s = roman.toUpperCase().trim();
-    let i = 0;
-    let val = 0;
+    let i = 0, value = 0;
 
     while (i < s.length) {
       if (i + 1 < s.length && romanMap.has(s.slice(i, i + 2))) {
-        val += romanMap.get(s.slice(i, i + 2));
+        value += romanMap.get(s.slice(i, i + 2));
         i += 2;
       } else {
-        val += romanMap.get(s[i]) || 0;
+        value += romanMap.get(s[i]);
         i += 1;
       }
     }
-    return val;
-  };
+    return value;
+  }
 
-  const value = input ? romanToInt(input) : "—";
+  function handleChange(e) {
+    const val = e.target.value;
+    setInput(val);
+    const num = convertRoman(val);
+    setResult(num === null ? "Invalid Roman numeral" : num);
+  }
 
   return (
     <div>
-      <section>
-        <h1>Task 1 — Roman Numeral Converter</h1>
-        <p>
-          Convert classical Roman numerals to integers. Supports standard symbols
-          (I, V, X, L, C, D, M) and subtractive notation (IV, IX, XL, XC, CD, CM).
-        </p>
-      </section>
+      <h1>Task 1 — Roman Numeral Converter</h1>
+      <p>
+        Convert classical Roman numerals to integers. Supports I, V, X, L, C, D, M with
+        proper subtractive notation (IV, IX, XL, XC, CD, CM).
+      </p>
 
-      <section>
-        <h2>Roman Number ➜ Integer</h2>
-        <p>
-          Works up to 3999. Example inputs: LXXXVIII, XXXIV, MMXXIV.
-        </p>
+      <div>
+        <label>Enter Roman numeral:</label>
+        <input
+          value={input}
+          onChange={handleChange}
+          placeholder="e.g., LXXXVIII or XXXIV"
+        />
+      </div>
 
-        <div>
-          <div>
-            <label>Roman input:</label> <br />
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="e.g., LXXXVIII or XXXIV"
-            />
-          </div>
-
-          <div>
-            <p>Converted value:</p>
-            <h3>{value}</h3>
-          </div>
-        </div>
-      </section>
+      <div>
+        <p>Converted value:</p>
+        <h2>{input ? result : "—"}</h2>
+      </div>
     </div>
   );
 }
